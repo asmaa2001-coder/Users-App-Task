@@ -2,17 +2,19 @@ package com.example.usersapp
 
 import android.app.Application
 import android.content.Context
-
+import com.example.usersapp.di.appModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.GlobalContext.startKoin
 
 
 class UserApp : Application() {
     override fun onCreate() {
         super.onCreate()
         application = this
-//        startKoin {
-//            androidContext(this@UserApp)
-//            modules(appModule)
-//        }
+        startKoin {
+            androidContext(this@UserApp)
+            modules(appModule)
+        }
 
     }
 

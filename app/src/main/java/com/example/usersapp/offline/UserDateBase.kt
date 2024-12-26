@@ -8,37 +8,61 @@ import androidx.room.TypeConverters
 import com.example.usersapp.domain.model.Users
 import com.example.usersapp.network.Converter
 
-@Database(
-    entities = [Users::class] ,
-    version = 1 ,
-    exportSchema = false
-)
-
+@Database(entities = [Users::class] , version = 1 , exportSchema = false)
 @TypeConverters(Converter::class)
-abstract class UserDateBase() : RoomDatabase() {
+abstract class UserDateBase : RoomDatabase() {
     abstract val dao: UserDao
 
     companion object {
         @Volatile
-        private var dataBaseInstance: UserDao? = null
-        private fun createInstance(context: Context): UserDateBase {
-            return Room.databaseBuilder(
-                context.applicationContext ,
-                UserDateBase::class.java ,
-                "User_Database"
-            ).addTypeConverter(Converter())
-                    .fallbackToDestructiveMigration().build()
-        }
+        private var INSTANCE: UserDateBase? = null
 
-        fun getInstance(context: Context): UserDao {
-            synchronized(this) {
-                if (dataBaseInstance == null) {
-                    dataBaseInstance = createInstance(context).dao
-                }
-                return dataBaseInstance as UserDao
+        fun getInstance(context: Context): UserDateBase {
+            return INSTANCE ?: synchronized(this) {
+                INSTANCE ?: Room.databaseBuilder(
+                    context.applicationContext ,
+                    UserDateBase::class.java ,
+                    "User_Database"
+                ).addTypeConverter(Converter())
+                        .fallbackToDestructiveMigration()
+                        .build()
+                        .also { INSTANCE = it }
             }
         }
-
     }
-
 }
+
+//@Database(
+//    entities = [Users::class] ,
+//    version = 1 ,
+//    exportSchema = false
+//)
+//
+//@TypeConverters(Converter::class)
+//abstract class UserDateBase() : RoomDatabase() {
+//    abstract val dao: UserDao
+//
+//    companion object {
+//        @Volatile
+//        private var dataBaseInstance: UserDao? = null
+//        private fun createInstance(context: Context): UserDateBase {
+//            return Room.databaseBuilder(
+//                context.applicationContext ,
+//                UserDateBase::class.java ,
+//                "User_Database"
+//            ).addTypeConverter(Converter())
+//                    .fallbackToDestructiveMigration().build()
+//        }
+//
+//        fun getInstance(context: Context): UserDao {
+//            synchronized(this) {
+//                if (dataBaseInstance == null) {
+//                    dataBaseInstance = createInstance(context).dao
+//                }
+//                return dataBaseInstance as UserDao
+//            }
+//        }
+//
+//    }
+//
+//}
