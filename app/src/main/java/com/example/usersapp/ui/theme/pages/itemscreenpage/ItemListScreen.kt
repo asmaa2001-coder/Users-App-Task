@@ -15,16 +15,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.users.ui.theme.components.AppLoadingBar
 import com.example.users.ui.theme.components.AppTextView
 import com.example.users.ui.theme.components.ItemContent
+import org.koin.androidx.compose.koinViewModel
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 @Preview(showSystemUi = true)
-fun ItemListScreen() {
-    val viewModel: UsersItemsViewModel = viewModel()
+fun ItemListScreen(viewModel: UsersItemsViewModel = koinViewModel()) {
     val state = viewModel.state.collectAsState().value
 
     if (state.isLoading) {
@@ -38,7 +37,8 @@ fun ItemListScreen() {
                 value = "No Restoring Data" ,
                 modifier = Modifier
                         .fillMaxSize()
-                        .padding(16.dp).align(androidx.compose.ui.Alignment.Center) ,
+                        .padding(16.dp)
+                        .align(androidx.compose.ui.Alignment.Center) ,
                 textStyle = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.error)
             )
         }

@@ -5,9 +5,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object UserClient {
     private const val URL = "https://jsonplaceholder.typicode.com/"
-   private val retrofit: Retrofit by lazy {
+    private val retrofit: Retrofit by lazy {
         Retrofit.Builder()
-                .baseUrl(URL).addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(URL).
+                addConverterFactory(GsonConverterFactory.create())
                 .build()
 
     }
