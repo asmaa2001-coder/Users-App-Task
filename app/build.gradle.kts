@@ -1,7 +1,11 @@
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.compose.compiler)
     id("kotlin-kapt")
+    id("org.jetbrains.kotlin.plugin.serialization")
+
 }
 
 android {
@@ -92,13 +96,21 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     kapt(libs.androidx.room.compiler)
     // Koin Android
-    implementation ("io.insert-koin:koin-android:4.0.0")
-    implementation( "io.insert-koin:koin-androidx-navigation:4.0.0")
-    implementation ("io.insert-koin:koin-androidx-compose:4.0.0")
-    testImplementation (libs.koin.test.junit4)
-    //kon for view model
+    implementation("io.insert-koin:koin-android:4.0.0")
+    implementation("io.insert-koin:koin-androidx-navigation:4.0.0")
+    implementation("io.insert-koin:koin-androidx-compose:4.0.0")
+    testImplementation(libs.koin.test.junit4)
 
 
+    //ktor
+    implementation(platform(libs.ktor.bom))
+    implementation(libs.ktor.ktor.client.android)
+    implementation(libs.ktor.ktor.client.serialization)
+    implementation(libs.ktor.ktor.client.logging)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.client.cio)
+    implementation(libs.kotlinx.serialization.json)
 
     // Testing libraries
     testImplementation(libs.junit)
@@ -108,4 +120,5 @@ dependencies {
     // Debugging tools
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
 }

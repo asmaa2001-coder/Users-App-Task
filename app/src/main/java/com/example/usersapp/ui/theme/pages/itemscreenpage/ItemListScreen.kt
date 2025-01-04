@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.example.users.ui.theme.components.AppLoadingBar
 import com.example.users.ui.theme.components.AppTextView
 import com.example.users.ui.theme.components.ItemContent
+import com.example.usersapp.domain.model.Users
 import org.koin.androidx.compose.koinViewModel
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -69,6 +70,28 @@ fun UsersItemsContent(
                     onIntent(UsersItemsIntent.ToggleLikeUser(state.users[item].id))
                 } ,
                 companyName = state.users[item].company.name
+            )
+        }
+    }
+}
+
+@Composable
+fun KtorList(list: List<Users>){
+    LazyColumn(
+        modifier = Modifier
+                .fillMaxSize()
+                .padding(8.dp)
+    ) {
+        items(list.size) { item ->
+            ItemContent(
+                name = list[item].name,
+                email = list[item].email ,
+                phone = list[item].phone ,
+                image = if (list[item].liked) Icons.Default.Favorite else Icons.Default.FavoriteBorder ,
+                onClick = {
+
+                } ,
+                companyName = list[item].company.name
             )
         }
     }

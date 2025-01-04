@@ -3,10 +3,9 @@ package com.example.users.ui.theme.pages.itemslist
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.users.network.UserClient
-import com.example.users.network.UserService
 import com.example.usersapp.domain.model.Users
 import com.example.usersapp.offline.UserDateBase
+import com.example.usersapp.remote.ktor.UserService
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,19 +14,18 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
- class UsersItemsViewModel(
-    private val apiService: UserService,
-    private val userDao: UserDateBase
+class UsersItemsViewModel(
+    private val userDao: UserDateBase ,
+    private val userService: UserService
 ) : ViewModel() {
     private val _state = MutableStateFlow(UsersItemsViewState())
     val state: StateFlow<UsersItemsViewState> = _state.asStateFlow()
 
 
-    private val handleError = CoroutineExceptionHandler { _, error ->
+    private val handleError = CoroutineExceptionHandler { _ , error ->
         error.printStackTrace()
-        Log.e("Users", error.toString())
+        Log.e("Users" , error.toString())
     }
-
 
 
     init {
@@ -52,18 +50,18 @@ import kotlinx.coroutines.withContext
 
         viewModelScope.launch(handleError) {
             getUsers().let { users ->
-                _state.emit(_state.value.copy(users = users, isLoading = false))
+                _state.emit(_state.value.copy(users = users , isLoading = false))
             }
         }
     }
 
     private suspend fun getUsers(): List<Users> = withContext(Dispatchers.IO) {
         try {
-            val apiUsers = apiService.getUsers()
+            val apiUsers = userService.getUsers()
             val cachedLikes = userDao.dao.getLikedUsers()
             return@withContext apiUsers.mergeWithCachedLikes(cachedLikes)
         } catch (e: Exception) {
-            Log.e("Users", "API call failed, using cached data.")
+            Log.e("Users" , "API call failed, using cached data.")
             return@withContext userDao.dao.getLikedUsers()
         }
     }
@@ -104,4 +102,4 @@ import kotlinx.coroutines.withContext
     }
 
 
- }
+}
