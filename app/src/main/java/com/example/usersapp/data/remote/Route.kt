@@ -1,4 +1,4 @@
-package com.example.usersapp.remote.ktor
+package com.example.usersapp.data.remote
 
 object Route {
     private const val BASE_URL="https://jsonplaceholder.typicode.com/"

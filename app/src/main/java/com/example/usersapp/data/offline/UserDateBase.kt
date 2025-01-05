@@ -1,4 +1,4 @@
-package com.example.usersapp.offline
+package com.example.usersapp.data.offline
 
 import android.content.Context
 import androidx.room.Database
@@ -6,7 +6,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.usersapp.domain.model.Users
-import com.example.usersapp.remote.ktor.Converter
 
 @Database(entities = [Users::class] , version = 1 , exportSchema = false)
 @TypeConverters(Converter::class)

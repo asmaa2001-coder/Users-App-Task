@@ -1,4 +1,4 @@
-package com.example.usersapp.offline
+package com.example.usersapp.data.offline
 
 import androidx.room.Dao
 import androidx.room.Insert

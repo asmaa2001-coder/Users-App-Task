@@ -5,6 +5,7 @@ import android.content.Context
 import com.example.usersapp.di.appModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext.startKoin
+import org.koin.core.logger.Level
 
 
 class UserApp : Application() {
@@ -13,6 +14,7 @@ class UserApp : Application() {
         application = this
         startKoin {
             androidContext(this@UserApp)
+            printLogger(Level.DEBUG)
             modules(appModule)
         }
 

@@ -1,4 +1,4 @@
-package com.example.usersapp.remote.ktor
+package com.example.usersapp.data.remote
 
 import com.example.usersapp.domain.model.Users
 import io.ktor.client.HttpClient
@@ -16,11 +16,11 @@ import kotlinx.serialization.json.Json
 private const val TIME_OUT = 1500L
 
 interface UserService {
-    suspend fun getUsers(): List<Users>
+    suspend fun fetchUsers(): List<Users>
 
     companion object {
         fun serviceCreate(): UserService {
-            return UserServiceImpl(
+            return RemoteDataSource(
                 client = HttpClient(Android) {
                     install(
                         ContentNegotiation

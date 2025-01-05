@@ -4,8 +4,10 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.usersapp.domain.model.Users
-import com.example.usersapp.offline.UserDateBase
-import com.example.usersapp.remote.ktor.UserService
+import com.example.usersapp.data.offline.UserDateBase
+import com.example.usersapp.data.remote.UserService
+import com.example.usersapp.domain.repository.DataRepository
+import com.example.usersapp.domain.repository.DataRepositoryImpl
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,8 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class UsersItemsViewModel(
-    private val userDao: UserDateBase ,
-    private val userService: UserService
+    private val dataRepository: DataRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(UsersItemsViewState())
     val state: StateFlow<UsersItemsViewState> = _state.asStateFlow()
@@ -57,12 +58,12 @@ class UsersItemsViewModel(
 
     private suspend fun getUsers(): List<Users> = withContext(Dispatchers.IO) {
         try {
-            val apiUsers = userService.getUsers()
-            val cachedLikes = userDao.dao.getLikedUsers()
+            val apiUsers = dataRepository.getData()
+            val cachedLikes = dataRepository.getFavourites()
             return@withContext apiUsers.mergeWithCachedLikes(cachedLikes)
         } catch (e: Exception) {
             Log.e("Users" , "API call failed, using cached data.")
-            return@withContext userDao.dao.getLikedUsers()
+            return@withContext dataRepository.getFavourites()
         }
     }
 
@@ -91,9 +92,9 @@ class UsersItemsViewModel(
                 _state.emit(_state.value.copy(users = updatedUsers))
 
                 if (updatedUser.liked) {
-                    userDao.dao.saveUser(updatedUser)
+                    dataRepository.saveFavourites(updatedUser)
                 } else {
-                    userDao.dao.deleteUser(userId)
+                    dataRepository.deleteFavouriteUser(updatedUser)
                 }
             } catch (e: Exception) {
                 _state.emit(_state.value.copy(error = e.message))

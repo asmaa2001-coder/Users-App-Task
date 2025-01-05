@@ -1,4 +1,4 @@
-package com.example.usersapp.remote.ktor
+package com.example.usersapp.data.offline
 import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
 import com.example.usersapp.domain.model.Address
